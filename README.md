@@ -6,7 +6,7 @@ It turns
 
 ```elixir
 use MQTTMatcher
-mqtt_match "a/+b/#" do
+match "a/+b/#" do
   IO.inspect(b)
   IO.inspect(rest)
 end
@@ -15,7 +15,7 @@ end
 into this:
 
 ```elixir
-def mqtt_match(path, args \\ nil) do
+def match(path, args \\ nil) do
   path
   |> String.split("/")
   |> int_mqtt_match(args)

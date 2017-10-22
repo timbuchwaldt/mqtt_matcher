@@ -3,7 +3,7 @@ defmodule MQTTMatcher do
     quote do
       import MQTTMatcher
 
-      def mqtt_match(path, args \\ nil) do
+      def match(path, args \\ nil) do
         path
         |> String.split("/")
         |> int_mqtt_match(args)
@@ -11,11 +11,11 @@ defmodule MQTTMatcher do
     end
   end
 
-  defmacro mqtt_match("/" <> _, _) do
+  defmacro match("/" <> _, _) do
     raise "MQTT Topics with a leading slash are forbidden"
   end
 
-  defmacro mqtt_match(string, do: block) do
+  defmacro match(string, do: block) do
     split =
       String.split(string, "/")
       |> Enum.map(&map/1)
