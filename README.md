@@ -6,8 +6,8 @@ It turns
 ```
 use MQTTMatcher
 mqtt_match "a/+b/#" do
-	IO.inspect(b)
-	IO.inspect(rest)
+  IO.inspect(b)
+  IO.inspect(rest)
 end
 ```
 
@@ -15,14 +15,14 @@ into this:
 
 ```
 def mqtt_match(path, args \\ nil) do
-	path
-	|> String.split("/")
-	|> int_mqtt_match(args)
+  path
+  |> String.split("/")
+  |> int_mqtt_match(args)
 end
 
 defp int_mqtt_match(["a", b|rest], args) do
-	IO.inspect(b)
-	IO.inspect(rest)
+  IO.inspect(b)
+  IO.inspect(rest)
 end
 ```
 
