@@ -1,4 +1,5 @@
 defmodule SampleMatcher do
+  @moduledoc false
   use MQTTMatcher
 
   match "argsandpayload", payload, args do

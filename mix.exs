@@ -11,7 +11,8 @@ defmodule MQTTMatcher.MixProject do
       description: description(),
       package: package(),
       name: "MQTTMatcher",
-      source_url: "https://github.com/timbuchwaldt/mqtt_matcher"
+      source_url: "https://github.com/timbuchwaldt/mqtt_matcher",
+      docs: [main: "README", extras: ["README.md"]]
     ]
   end
 
@@ -27,6 +28,7 @@ defmodule MQTTMatcher.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
@@ -39,7 +41,7 @@ defmodule MQTTMatcher.MixProject do
       # This option is only needed when you don't want to use the OTP application name
       name: "mqtt_matcher",
       # These are the default files included in the package
-      files: ["lib", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+      files: ["lib", "mix.exs", "README*", "LICENSE"],
       maintainers: ["Tim Buchwaldt"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/timbuchwaldt/mqtt_matcher"}
