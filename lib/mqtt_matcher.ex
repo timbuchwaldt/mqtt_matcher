@@ -29,7 +29,9 @@ defmodule MQTTMatcher do
       raise "MQTT topics can only contain '/#' at the end or be '#'"
     end
 
+    # due to matching rests as [a,b,c | rest] we need to differentiate between 3 cases
     cond do
+      # exactly a "#""
       string == "#" ->
         quote do
           defp int_mqtt_match(var!(rest), var!(args)) do
@@ -37,6 +39,7 @@ defmodule MQTTMatcher do
           end
         end
 
+      # ending with a "#"
       String.ends_with?(string, "#") ->
         quote do
           defp int_mqtt_match([unquote_splicing(split) | var!(rest)], var!(args)) do
@@ -44,6 +47,7 @@ defmodule MQTTMatcher do
           end
         end
 
+      # or not containing any "#"
       true ->
         quote do
           defp int_mqtt_match(unquote(split), var!(args)) do
@@ -54,10 +58,12 @@ defmodule MQTTMatcher do
   end
 
   defp map("+") do
+    # simple "+" in the path are ignored in the function definition
     quote do: _
   end
 
   defp map("+" <> identifier) do
+    # "+name" is transferred to a variable called "name"
     unless valid_variable_name?(identifier) do
       raise "Invalid variable name defined: #{identifier}"
     end
@@ -71,8 +77,10 @@ defmodule MQTTMatcher do
     quote do: var!(unquote(id))
   end
 
+  # hashes are ignored, they can't be matched in the list
   defp map("#"), do: nil
 
+  # remaining strings are used as is
   defp map(str), do: str
 
   defp valid_variable_name?(candidate), do: Regex.match?(~r/^_?[a-z]*$/, candidate)
