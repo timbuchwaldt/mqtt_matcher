@@ -1,7 +1,6 @@
 defmodule SampleMatcher do
   use MQTTMatcher
 
-
   mqtt_match "+" do
     :single_wildcard
   end
