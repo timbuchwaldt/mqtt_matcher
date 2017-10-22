@@ -12,7 +12,7 @@ defmodule MQTTMatcher.MixProject do
       package: package(),
       name: "MQTTMatcher",
       source_url: "https://github.com/timbuchwaldt/mqtt_matcher",
-      docs: [main: "README", extras: ["README.md"]]
+      docs: [main: "readme", extras: ["README.md"]]
     ]
   end
 
