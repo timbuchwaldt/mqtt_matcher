@@ -6,7 +6,7 @@ It turns
 
 ```elixir
 use MQTTMatcher
-match "a/+b/#" do
+match "a/+b/#", payload, _args do
   IO.inspect(b)
   IO.inspect(rest)
 end
@@ -15,13 +15,13 @@ end
 into this:
 
 ```elixir
-def match(path, args \\ nil) do
+def match(path, payload, args \\ nil) do
   path
   |> String.split("/")
   |> int_mqtt_match(args)
 end
 
-defp int_mqtt_match(["a", b|rest], args) do
+defp int_mqtt_match(["a", b|rest], payload, args) do
   IO.inspect(b)
   IO.inspect(rest)
 end
@@ -30,6 +30,8 @@ end
 The variables defined in the MQTT topic with a beginning + are turned into Elixir variables,
 the '#' is turned into a tail matching list. All matches are defined as private functions and a wrapper function
 is created to call those functions, splitting the input MQTT topic and passing an argument list.
+
+Arguments and the payload are passed right through and can be used for pattern matching as well.
 
 ## Installation
 
