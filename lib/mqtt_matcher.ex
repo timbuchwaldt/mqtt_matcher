@@ -3,10 +3,10 @@ defmodule MQTTMatcher do
     quote do
       import MQTTMatcher
 
-      def match(path, args \\ nil) do
+      def match(path, payload, args \\ nil) do
         path
         |> String.split("/")
-        |> int_mqtt_match(args)
+        |> int_mqtt_match(payload, args)
       end
     end
   end
@@ -15,34 +15,38 @@ defmodule MQTTMatcher do
     raise "MQTT Topics with a leading slash are forbidden"
   end
 
-  defmacro match(string, do: block) do
+  defmacro match(topic, payload, args, do: block) do
     split =
-      String.split(string, "/")
+      String.split(topic, "/")
       |> Enum.map(&map/1)
       |> Enum.filter(fn item -> item != nil end)
 
-    if count_hash(string) > 1 do
+    if count_hash(topic) > 1 do
       raise "MQTT topics can only contain one '#'"
     end
 
-    if String.contains?(string, "#") and not(string == "#" or String.ends_with?(string, "/#")) do
+    if String.contains?(topic, "#") and not(topic == "#" or String.ends_with?(topic, "/#")) do
       raise "MQTT topics can only contain '/#' at the end or be '#'"
     end
 
     # due to matching rests as [a,b,c | rest] we need to differentiate between 3 cases
     cond do
       # exactly a "#""
-      string == "#" ->
+      topic == "#" ->
         quote do
-          defp int_mqtt_match(var!(rest), var!(args)) do
+          defp int_mqtt_match(var!(rest), unquote(payload), unquote(args)) do
             unquote(block)
           end
         end
 
       # ending with a "#"
-      String.ends_with?(string, "#") ->
+      String.ends_with?(topic, "#") ->
         quote do
-          defp int_mqtt_match([unquote_splicing(split) | var!(rest)], var!(args)) do
+          defp int_mqtt_match(
+                 [unquote_splicing(split) | var!(rest)],
+                 unquote(payload),
+                 unquote(args)
+               ) do
             unquote(block)
           end
         end
@@ -50,7 +54,7 @@ defmodule MQTTMatcher do
       # or not containing any "#"
       true ->
         quote do
-          defp int_mqtt_match(unquote(split), var!(args)) do
+          defp int_mqtt_match(unquote(split), unquote(payload), unquote(args)) do
             unquote(block)
           end
         end
