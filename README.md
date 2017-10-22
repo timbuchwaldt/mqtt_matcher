@@ -21,7 +21,7 @@ def match(path, payload, args \\ nil) do
   |> int_mqtt_match(args)
 end
 
-defp int_mqtt_match(["a", b|rest], payload, args) do
+defp int_mqtt_match(["a", b | rest], payload, args) do
   IO.inspect(b)
   IO.inspect(rest)
 end
@@ -29,9 +29,21 @@ end
 
 The variables defined in the MQTT topic with a beginning + are turned into Elixir variables,
 the '#' is turned into a tail matching list. All matches are defined as private functions and a wrapper function
-is created to call those functions, splitting the input MQTT topic and passing an argument list.
+is created to call those functions, splitting the input MQTT topic and passing payloads as well as generic (optional) arguments.
 
-Arguments and the payload are passed right through and can be used for pattern matching as well.
+## Matching rules
+MQTTMatcher uses the following rules to expand the parts of the part to Elixir code:
+
+| Path pattern | Elixir |
+| --- | --- |
+| foo| `"foo"`|
+| +foo | `foo`|
+| +_foo| `_foo`|
+| +_ | `_` |
+| + | `_` |
+
+  Please note that repeating a named path pattern (`foo/+bar/+bar`) means that the pattern must repeat the same way to match. This means `foo/test/test` would match the given pattern, `foo/bar/baz` would not.
+
 
 ## Installation
 
@@ -49,4 +61,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/mqtt_matcher](https://hexdocs.pm/mqtt_matcher).
-
