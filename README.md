@@ -1,9 +1,10 @@
 # MQTTMatcher
 
-MQTTMatcher allows for defining functions to match MQTT topics
+MQTTMatcher allows for defining functions to match MQTT topics.
+
 It turns
 
-```
+```elixir
 use MQTTMatcher
 mqtt_match "a/+b/#" do
   IO.inspect(b)
@@ -13,7 +14,7 @@ end
 
 into this:
 
-```
+```elixir
 def mqtt_match(path, args \\ nil) do
   path
   |> String.split("/")
